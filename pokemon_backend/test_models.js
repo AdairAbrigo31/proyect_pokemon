@@ -14,7 +14,6 @@ async function testModels() {
         
         // Crear un usuario de prueba
         const testUser = await User.create({
-            username: 'testuser2',
             email: 'test@example2.com',
             password: 'password123'
         });

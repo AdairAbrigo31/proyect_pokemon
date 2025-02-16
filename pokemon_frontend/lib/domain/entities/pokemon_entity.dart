@@ -2,7 +2,7 @@
 
 class PokemonEntity {
 
-  final String id;
+  final int id;
   final String name;
   final List<String>? types;
   final List<String>? images;
@@ -18,7 +18,7 @@ class PokemonEntity {
 
 
   PokemonEntity copyWith({
-    String? id,
+    int? id,
     String? name,
     List<String>? types,
     List<String>? images,

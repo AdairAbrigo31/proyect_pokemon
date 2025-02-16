@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_pokemon_tia/configuration/configuration.dart';
+import 'package:my_pokemon_tia/presentation/providers/providers.dart';
 import 'package:my_pokemon_tia/presentation/widgets/widgets.dart';
 
 class LoginView extends ConsumerStatefulWidget {
@@ -75,6 +77,18 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
             text: "Iniciar Sesión", 
             onPressed: () {
+
+              if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Por favor, rellena todos los campos'),
+                  ),
+                );
+                return;
+              }
+
+              ref.read(authProvider.notifier).login(_emailController.text, _passwordController.text);
+              router.pushNamed('home');
               
             }
             
@@ -85,13 +99,19 @@ class _LoginViewState extends ConsumerState<LoginView> {
           // Opción de registro
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+
             children: [
+
               const Text('¿No tienes una cuenta?'),
+
               TextButton(
+
                 onPressed: () {
-                  // Aquí va la navegación a la pantalla de registro
+                  router.pushNamed('register');
                 },
+
                 child: const Text('Regístrate'),
+
               ),
             ],
           ),

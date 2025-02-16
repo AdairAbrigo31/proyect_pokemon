@@ -39,8 +39,6 @@ class PrimaryButton extends StatelessWidget {
         
         style: ElevatedButton.styleFrom(
 
-          backgroundColor: Theme.of(context).primaryColor,
-
           padding: padding ?? const EdgeInsets.symmetric(horizontal: 16),
 
           shape: RoundedRectangleBorder(
