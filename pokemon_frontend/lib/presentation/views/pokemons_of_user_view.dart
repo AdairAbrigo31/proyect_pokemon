@@ -67,7 +67,7 @@ class PokemonsOfUserView extends ConsumerWidget{
 
                     final pokemon = pokemons[index];
 
-                    return CardPokemonSimple(pokemon: pokemon);
+                    return CardPokemonSaved(pokemon: pokemon);
                     
                   },
                 )

@@ -25,6 +25,8 @@ class PokemonMapper {
         )
         : 
         null,
+
+      idFavorite: map['idFavorite']
     );
   }
 

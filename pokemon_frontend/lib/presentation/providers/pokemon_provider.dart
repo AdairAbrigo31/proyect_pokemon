@@ -75,6 +75,21 @@ class PokemonNotifier extends StateNotifier<PokemonState> {
   }
 
 
+  Future<void> deletePokemonOfUser(String token, String name) async {
+
+    try {
+
+      await _backendApi.deleteFavorite(token, name);
+
+    } catch (error) {
+
+      throw ("$error");
+
+    }
+
+  }
+
+
 
   void updatePokemonSelected (PokemonEntity pokemonSelected) {
 

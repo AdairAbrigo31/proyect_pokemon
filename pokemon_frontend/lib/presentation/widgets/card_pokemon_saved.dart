@@ -2,17 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_pokemon_tia/domain/entities/entities.dart';
 import 'package:my_pokemon_tia/presentation/providers/providers.dart';
-import 'package:my_pokemon_tia/presentation/widgets/primary_button.dart';
+import 'package:my_pokemon_tia/presentation/widgets/widgets.dart';
 
 
 
-class CardPokemonDetailed extends ConsumerWidget {
+class CardPokemonSaved extends ConsumerWidget {
   final PokemonEntity pokemon;
   
-  const CardPokemonDetailed({super.key, required this.pokemon});
+  const CardPokemonSaved({super.key, required this.pokemon});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
+    final token = ref.watch(authProvider).token!;
 
     return Card(
 
@@ -41,6 +43,7 @@ class CardPokemonDetailed extends ConsumerWidget {
                     ),
                   ),
                 ),
+
                 Text(
                   '#${pokemon.id.toString().padLeft(3, '0')}',
                   style: TextStyle(
@@ -49,6 +52,18 @@ class CardPokemonDetailed extends ConsumerWidget {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+
+                IconButton(
+
+                  onPressed: () {
+                    
+                    ref.read(pokemonProvider.notifier).deletePokemonOfUser(token , pokemon.name);
+
+                  },
+
+                  icon: Icon(Icons.delete)
+                  
+                )
               ],
             ),
             
@@ -123,14 +138,15 @@ class CardPokemonDetailed extends ConsumerWidget {
 
             PrimaryButton(
 
-              text: "Agregar a favoritos", 
+              text: "Evolucionar", 
               
               onPressed: () async {
 
                 try {
 
-                  final token = ref.read(authProvider).token;
-                  await ref.read(pokemonProvider.notifier).savePokemon(token!, pokemon);
+                  //Buscar evolución
+                  //Si hay evolución, guardarla en la base de datos
+                  //Borrar el pokemon evolucionado de la base de datos
 
                 } catch ( error ) {
 
@@ -140,8 +156,6 @@ class CardPokemonDetailed extends ConsumerWidget {
                     ),
                   );
                 }
-
-                
 
               }
             )

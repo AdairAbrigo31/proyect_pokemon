@@ -86,28 +86,39 @@ class _RegisterViewState extends ConsumerState <RegisterView> {
             text: "Registrarse", 
             onPressed: () async {
 
-              if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+              try {
+
+                if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Por favor, rellena todos los campos'),
+                    ),
+                  );
+                  return;
+                }
+
+                ref.read(authProvider.notifier).register(_emailController.text, _passwordController.text);
+                
+                ref.read(authProvider).token != null ? 
+                
+                router.pushReplacementNamed('home'): 
+                
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Por favor, rellena todos los campos'),
+                    content: Text('Error al registrarse'),
                   ),
-                );
-                return;
+                ); 
+
+
+              } catch (error) {
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('$error'),
+                  ),
+                ); 
               }
 
-              ref.read(authProvider.notifier).register(_emailController.text, _passwordController.text);
-              
-              ref.read(authProvider).token != null ? 
-              
-              router.pushReplacementNamed('home'): 
-              
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Error al registrarse'),
-                ),
-              );
-              
-              
             }
             
           ),

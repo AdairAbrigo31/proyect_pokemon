@@ -8,6 +8,6 @@ router.use(authMiddleware);
 
 router.post('/favorites', pokemonController.addFavorite);
 router.get('/favorites', pokemonController.getFavorites);
-router.delete('/favorites/:id', pokemonController.removeFavorite);
+router.delete('/favorites/:pokemon_name', pokemonController.removeFavorite);
 
 module.exports = router;

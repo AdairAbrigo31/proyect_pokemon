@@ -7,7 +7,7 @@ import 'package:my_pokemon_tia/infrastructure/mappers/mappers.dart';
 
 class BackendApi {
 
-  final String routeBaseApi = 'https://88f8-2800-bf0-8045-e58-399c-cf6e-ed5f-61aa.ngrok-free.app/api';
+  final String routeBaseApi = 'https://204f-2800-bf0-8045-e58-399c-cf6e-ed5f-61aa.ngrok-free.app/api';
 
 
   final Dio dio = Dio();
@@ -110,6 +110,46 @@ class BackendApi {
 
     }
   
+  }
+
+
+  Future<void> deleteFavorite(String token, String pokemon_name) async {
+
+    try {
+      final response = await dio.delete(
+        '$routeBaseApi/pokemon/favorites/$pokemon_name',
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token'
+          },
+          validateStatus: (status) {
+            return status == 204 || status == 200; // Aceptar ambos códigos
+          },
+        )
+      );
+
+      // Verificar respuesta
+      if (response.statusCode == 404) {
+        throw Exception('Pokemon favorito no encontrado');
+      }
+      
+    } catch (error) {
+
+      if (error is DioException) {
+
+        if (error.response?.statusCode == 404) {
+          throw Exception('Pokemon favorito no encontrado');
+        }
+
+        if (error.response?.statusCode == 500) {
+          throw Exception('Error en el servidor: ${error.response?.data['message']}');
+        }
+
+      }
+
+      throw Exception("Error al eliminar el pokemon: $error");
+      
+    }
   }
 
 

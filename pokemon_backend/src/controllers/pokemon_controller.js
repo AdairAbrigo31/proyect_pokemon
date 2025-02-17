@@ -68,35 +68,36 @@ const favoritePokemonController = {
 
 
     removeFavorite: async (req, res) => {
-
-        try {
-            
-            const { id } = req.params;
-            const user_id = req.user.id;
-
-            const deleted = await FavoritePokemon.destroy({
-                where: {
-                    id,
-                    user_id // Asegura que el pokemon pertenezca al usuario
-                }
-            });
-
-            if (!deleted) {
-                return res.status(404).json({
-                    message: 'Pokemon favorito no encontrado'
-                });
-            }
-
-            res.json({
-                message: 'Pokemon eliminado de favoritos'
-            });
-        } catch (error) {
-            console.error('Error al eliminar favorito:', error);
-            res.status(500).json({
-                message: 'Error al eliminar pokemon de favoritos'
-            });
-        }
-    }
+      try {
+          const { pokemon_name } = req.params;
+          const user_id = req.user.id;
+  
+          console.log('Intentando eliminar pokemon:', { pokemon_name, user_id });
+  
+          const favorite = await FavoritePokemon.findOne({
+              where: {
+                  pokemon_name,
+                  user_id
+              }
+          });
+  
+          if (!favorite) {
+              return res.status(404).json({
+                  message: 'Pokemon favorito no encontrado'
+              });
+          }
+  
+          await favorite.destroy();
+          res.status(204).send();
+  
+      } catch (error) {
+          console.error('Error detallado:', error);
+          res.status(500).json({
+              message: 'Error al eliminar pokemon de favoritos',
+              error: error.message
+          });
+      }
+  }
 
 }
 
