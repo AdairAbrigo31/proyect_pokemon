@@ -84,7 +84,7 @@ class _RegisterViewState extends ConsumerState <RegisterView> {
           PrimaryButton(
 
             text: "Registrarse", 
-            onPressed: () {
+            onPressed: () async {
 
               if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -96,7 +96,17 @@ class _RegisterViewState extends ConsumerState <RegisterView> {
               }
 
               ref.read(authProvider.notifier).register(_emailController.text, _passwordController.text);
-              router.pushNamed('home');
+              
+              ref.read(authProvider).token != null ? 
+              
+              router.pushReplacementNamed('home'): 
+              
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Error al registrarse'),
+                ),
+              );
+              
               
             }
             

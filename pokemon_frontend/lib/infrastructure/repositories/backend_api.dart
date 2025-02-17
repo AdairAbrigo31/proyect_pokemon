@@ -7,7 +7,8 @@ import 'package:my_pokemon_tia/infrastructure/mappers/mappers.dart';
 
 class BackendApi {
 
-  final String routeBase = 'https://20d2-2800-bf0-8045-e58-399c-cf6e-ed5f-61aa.ngrok-free.app/api/auth';
+  final String routeBaseApi = 'https://88f8-2800-bf0-8045-e58-399c-cf6e-ed5f-61aa.ngrok-free.app/api';
+
 
   final Dio dio = Dio();
 
@@ -18,7 +19,7 @@ class BackendApi {
 
       final Dio dio = Dio();
 
-      final response = await dio.post('$routeBase/register', data: {
+      final response = await dio.post('$routeBaseApi/auth/register', data: {
         'email': email,
         'password': password
       });
@@ -39,7 +40,7 @@ class BackendApi {
 
     try {
 
-      final response = await dio.post('$routeBase/login', data: {
+      final response = await dio.post('$routeBaseApi/auth/login', data: {
         'email': email,
         'password': password
       });
@@ -55,37 +56,30 @@ class BackendApi {
   }
 
 
-  Future<FavoritePokemonEntity> savePokemon ( String token, PokemonEntity pokemon ) async {
-
+  Future<FavoritePokemonEntity> savePokemon(String token, PokemonEntity pokemon) async {
     try {
-
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
-      final userId = decodedToken['id'];
-
       final response = await dio.post(
-
-        '$routeBase/pokemon', 
-        
+        '$routeBaseApi/pokemon/favorites',
         data: {
           'pokemon_name': pokemon.name,
           'pokemon_id': pokemon.id,
-          'user_id': userId,
-
-        }, options: Options(
+          // Eliminar user_id del body porque se obtiene del token
+        }, 
+        options: Options(
           headers: {
             'Authorization': 'Bearer $token'
           }
         )
       );
 
-      return FavoritePokemonMapper.fromMap(response.data);
-
-    } catch ( error ) {
-
-      throw ("$error");
-
+      if (response.statusCode == 201) {  // Verificar código de éxito
+        return FavoritePokemonMapper.fromMap(response.data['favPokemon']); // Nota el cambio aquí
+      } else {
+        throw Exception(response.data['message'] ?? 'Error al guardar el pokemon');
+      }
+    } catch (error) {
+      throw Exception("Error al guardar pokemon: $error");
     }
-
   }
 
 
@@ -94,8 +88,13 @@ class BackendApi {
 
     try {
 
+      final userId = JwtDecoder.decode(token)['id'];
+
       final response = await dio.get(
-        '$routeBase/pokemon',
+        '$routeBaseApi/pokemon/favorites',
+        data: {
+          'user_id': userId
+        },
         options: Options(
           headers: {
             'Authorization': 'Bearer $token'
@@ -112,5 +111,6 @@ class BackendApi {
     }
   
   }
+
 
 }

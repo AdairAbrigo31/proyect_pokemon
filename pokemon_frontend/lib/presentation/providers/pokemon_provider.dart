@@ -6,7 +6,10 @@ import 'package:my_pokemon_tia/infrastructure/repositories/repositories.dart';
 
 final pokemonProvider = StateNotifierProvider<PokemonNotifier, PokemonState>( (ref) {
 
-    return PokemonNotifier( PokeApi() );
+    return PokemonNotifier( 
+      PokeApi(), 
+      BackendApi() 
+    );
 
   }
 );
@@ -14,25 +17,58 @@ final pokemonProvider = StateNotifierProvider<PokemonNotifier, PokemonState>( (r
 
 
 class PokemonNotifier extends StateNotifier<PokemonState> {
-  final PokeApi _PokeApi;
+  final PokeApi _pokeApi;
+  final BackendApi _backendApi;
 
-  PokemonNotifier(this._PokeApi) : super(PokemonState());
+  PokemonNotifier(this._pokeApi, this._backendApi) : super(PokemonState());
+
 
   Future<List<PokemonEntity>> getPokemons() async {
-    
-    //state = state.copyWith(isLoading: true);
 
     try {
 
-      final pokemons = await _PokeApi.getPokemons();
-
-      //state = state.copyWith(pokemons: pokemons);
+      final pokemons = await _pokeApi.getPokemons();
 
       return pokemons;
 
     } catch (error) {
 
-      //state = state.copyWith(error: '$error');
+      return [];
+
+    }
+  }
+
+
+
+  Future<FavoritePokemonEntity> savePokemon (String token, PokemonEntity pokemon) async {
+
+    try {
+
+      final favoritePokemon = await _backendApi.savePokemon(token, pokemon);
+
+      return favoritePokemon;
+
+    } catch (error) {
+
+      throw ("$error");
+
+    }
+
+  }
+
+
+  Future<List<PokemonEntity>> getPokemonsOfUser(String token) async {
+
+    try {
+
+      final pokemonsFavorite = await _backendApi.getFavorites(token);
+
+      final pokemons = await _pokeApi.getPokemonsByNames(pokemonsFavorite.map((e) => e.pokemonName).toList());
+
+      return pokemons;
+
+    } catch (error) {
+
       return [];
 
     }

@@ -1,31 +1,30 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_pokemon_tia/configuration/configuration.dart';
-import 'package:my_pokemon_tia/presentation/views/home_view.dart';
+import 'package:my_pokemon_tia/presentation/views/views.dart';
 import 'package:my_pokemon_tia/presentation/widgets/app_bar_pokemon.dart';
 
-class HomeScreen extends StatelessWidget {
+class PokemonsOfUserScreen extends StatelessWidget {
 
-  const HomeScreen({super.key});
-
-
+  const PokemonsOfUserScreen({super.key});
+  
   @override
   Widget build(BuildContext context) {
     
     return Scaffold(
 
       appBar: AppBarPokemon(
-        
-        title: "Pokémons",
+
+        title: "Mis pokémons",
 
         actions: [
-          
+
           IconButton(
 
-            icon: const Icon(Icons.person_3_outlined),
+            icon: const Icon(Icons.logout),
             onPressed: () {
-
-              router.pushNamed('pokemons-of-user');
+              
+              router.pushNamed('login');
             }
             
           )
@@ -33,10 +32,12 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
 
-      body: HomeView(),
-
+      body: PokemonsOfUserView()
+      
     );
   }
+
+  
 
 
 }

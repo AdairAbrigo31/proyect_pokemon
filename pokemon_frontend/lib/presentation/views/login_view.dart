@@ -76,7 +76,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
           PrimaryButton(
 
             text: "Iniciar Sesión", 
-            onPressed: () {
+            onPressed: () async {
 
               if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -88,8 +88,16 @@ class _LoginViewState extends ConsumerState<LoginView> {
               }
 
               ref.read(authProvider.notifier).login(_emailController.text, _passwordController.text);
-              router.pushNamed('home');
-              
+
+              ref.read(authProvider).token != null ?
+               
+                router.pushReplacementNamed('home') :
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Credenciales incorrectas'),
+                  ),
+                );              
             }
             
           ),

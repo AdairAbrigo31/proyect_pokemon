@@ -7,7 +7,9 @@ class AppBarPokemon extends StatelessWidget implements PreferredSizeWidget{
 
   final String title;
 
-  const AppBarPokemon({super.key, required this.title});
+  final List<Widget>? actions;
+
+  const AppBarPokemon({super.key, required this.title, this.actions});
 
 
   @override
@@ -18,6 +20,10 @@ class AppBarPokemon extends StatelessWidget implements PreferredSizeWidget{
       title: Text(title),
 
       centerTitle: true,
+
+      actions: [
+        if (actions != null) ...actions!
+      ],
 
     );
   }

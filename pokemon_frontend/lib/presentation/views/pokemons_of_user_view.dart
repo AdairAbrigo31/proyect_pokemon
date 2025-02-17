@@ -1,31 +1,30 @@
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:my_pokemon_tia/presentation/providers/pokemon_provider.dart';
+import 'package:my_pokemon_tia/presentation/providers/providers.dart';
 import 'package:my_pokemon_tia/presentation/widgets/widgets.dart';
 
-class HomeView extends ConsumerWidget {
+class PokemonsOfUserView extends ConsumerWidget{
 
-  const HomeView({super.key});
+  const PokemonsOfUserView({super.key});
 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    return Padding(
+    final token = ref.watch(authProvider).token!;
 
-      padding: const EdgeInsets.all(16.0),
+    return Padding(padding : const EdgeInsets.all(16.0),
 
       child:  Column(
 
         children: [
 
-          Text( "Animate a capturar a estos pokemons" ),
+          Text( "Estos son los pokemons que has capturado" ),
 
           FutureBuilder(
             
-            future: ref.read(pokemonProvider.notifier).getPokemons(), 
+            future: ref.read(pokemonProvider.notifier).getPokemonsOfUser(token), 
             
             builder: (context, snapshot) {
 
@@ -58,7 +57,7 @@ class HomeView extends ConsumerWidget {
                 );
               }
 
-              return Expanded(
+              return Expanded (
 
                 child: ListView.builder(
 
@@ -82,5 +81,5 @@ class HomeView extends ConsumerWidget {
     );
   }
 
-
+  
 }

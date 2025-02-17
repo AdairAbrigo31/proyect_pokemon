@@ -20,24 +20,24 @@ class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier(this._backendApi) : super(AuthState(isAuth: false, token: null));
 
 
-  void login(String email, String password) async {
+  Future<void> login(String email, String password) async {
 
     try {
 
       final token = await _backendApi.login(email, password);
-      print(token);
       state = AuthState(isAuth: true, token: token);
 
-
     } catch (error) {
+
       throw ("$error");
+      
     }
     
 
   }
 
 
-  void register(String email, String password) async {
+  Future<void> register(String email, String password) async {
 
     try {
 

@@ -2,7 +2,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
-const FavoritePokemon = sequelize.define('FavoritePokemons', {
+const FavoritePokemon = sequelize.define('FavoritePokemon', {
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
