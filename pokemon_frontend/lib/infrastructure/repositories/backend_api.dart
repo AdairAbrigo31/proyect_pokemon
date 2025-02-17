@@ -36,7 +36,7 @@ class BackendApi {
 
 
 
-  Future<String> login ( String email, String password ) async {
+  Future<String?> login ( String email, String password ) async {
 
     try {
 
@@ -44,6 +44,10 @@ class BackendApi {
         'email': email,
         'password': password
       });
+
+      if (response.statusCode == 500) {
+        return null;
+      }
 
       return response.data['token'];
 
@@ -148,7 +152,7 @@ class BackendApi {
       }
 
       throw Exception("Error al eliminar el pokemon: $error");
-      
+
     }
   }
 

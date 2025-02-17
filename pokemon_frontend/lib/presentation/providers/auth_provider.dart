@@ -1,5 +1,6 @@
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:my_pokemon_tia/infrastructure/repositories/repositories.dart';
 
 
@@ -24,7 +25,14 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
     try {
 
+      bool hasInternet = await InternetConnectionChecker.instance.hasConnection;
+
+      if (!hasInternet) {
+        throw ("No hay conexión a internet");
+      }
+
       final token = await _backendApi.login(email, password);
+
       state = AuthState(isAuth: true, token: token);
 
     } catch (error) {

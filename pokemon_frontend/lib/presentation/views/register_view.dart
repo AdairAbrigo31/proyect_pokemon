@@ -97,7 +97,9 @@ class _RegisterViewState extends ConsumerState <RegisterView> {
                   return;
                 }
 
-                ref.read(authProvider.notifier).register(_emailController.text, _passwordController.text);
+                showLoading(context, "Iniciando sesión");
+
+                await ref.read(authProvider.notifier).register(_emailController.text, _passwordController.text);
                 
                 ref.read(authProvider).token != null ? 
                 
@@ -112,11 +114,13 @@ class _RegisterViewState extends ConsumerState <RegisterView> {
 
               } catch (error) {
 
+                hideLoading(context);
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('$error'),
+                    content: Text('Hay probelmas con el servidor'),
                   ),
-                ); 
+                );
               }
 
             }

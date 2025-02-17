@@ -78,26 +78,47 @@ class _LoginViewState extends ConsumerState<LoginView> {
             text: "Iniciar Sesión", 
             onPressed: () async {
 
-              if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+              try {
+
+                if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Por favor, rellena todos los campos'),
+                    ),
+                  );
+                  return;
+                }
+
+
+                showLoading(context, "Iniciando sesión");
+
+                await ref.read(authProvider.notifier).login(_emailController.text, _passwordController.text);
+
+                hideLoading(context);
+
+                ref.read(authProvider).token != null ?
+                
+                  router.pushReplacementNamed('home') :
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Credenciales incorrectas'),
+                    ),
+                  );  
+
+
+              } catch (error) {
+
+                hideLoading(context);
+
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Por favor, rellena todos los campos'),
+                  SnackBar(
+                    content: Text('Hay probelmas con el servidor'),
                   ),
                 );
-                return;
               }
 
-              ref.read(authProvider.notifier).login(_emailController.text, _passwordController.text);
-
-              ref.read(authProvider).token != null ?
-               
-                router.pushReplacementNamed('home') :
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Credenciales incorrectas'),
-                  ),
-                );              
+                          
             }
             
           ),

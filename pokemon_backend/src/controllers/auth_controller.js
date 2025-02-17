@@ -78,7 +78,7 @@ const authController = {
         } catch (error) {
 
             console.error(error);
-            res.status(400).json({message: 'Error al iniciar sesión'});
+            res.status(500).json({message: 'Error en el servidor'});
         }
 
     }
