@@ -113,7 +113,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Hay probelmas con el servidor'),
+                    content: Text('$error'),
                   ),
                 );
               }

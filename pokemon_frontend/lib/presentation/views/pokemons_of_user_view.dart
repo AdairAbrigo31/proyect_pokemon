@@ -14,6 +14,10 @@ class PokemonsOfUserView extends ConsumerWidget{
 
     final token = ref.watch(authProvider).token!;
 
+    final pokemonNotifier = ref.read(pokemonProvider.notifier);
+
+    final pokemonState = ref.watch(pokemonProvider);
+
     return Padding(padding : const EdgeInsets.all(16.0),
 
       child:  Column(
@@ -23,8 +27,10 @@ class PokemonsOfUserView extends ConsumerWidget{
           Text( "Estos son los pokemons que has capturado" ),
 
           FutureBuilder(
+
+            key: UniqueKey(),
             
-            future: ref.read(pokemonProvider.notifier).getPokemonsOfUser(token), 
+            future: pokemonNotifier.getPokemonsOfUser(token), 
             
             builder: (context, snapshot) {
 

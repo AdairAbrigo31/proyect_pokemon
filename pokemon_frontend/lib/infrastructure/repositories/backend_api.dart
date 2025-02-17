@@ -7,7 +7,7 @@ import 'package:my_pokemon_tia/infrastructure/mappers/mappers.dart';
 
 class BackendApi {
 
-  final String routeBaseApi = 'https://204f-2800-bf0-8045-e58-399c-cf6e-ed5f-61aa.ngrok-free.app/api';
+  final String routeBaseApi = 'https://ee6a-2800-bf0-8045-e58-399c-cf6e-ed5f-61aa.ngrok-free.app/api';
 
 
   final Dio dio = Dio();
@@ -49,13 +49,20 @@ class BackendApi {
         return null;
       }
 
+      if( response.statusCode == 400) {
+        throw Exception('Credenciales incorrectas');
+      }
+
       return response.data['token'];
 
-    } catch ( error ) {
+    }  catch (error) {
 
-      throw ("$error");
-
+    if (error is DioException && error.response?.statusCode == 400) {
+      throw Exception(error.response?.data['message']);
     }
+    
+    throw Exception('Error en el servidor');
+  }
 
   }
 
@@ -76,10 +83,16 @@ class BackendApi {
         )
       );
 
-      if (response.statusCode == 201) {  // Verificar código de éxito
-        return FavoritePokemonMapper.fromMap(response.data['favPokemon']); // Nota el cambio aquí
+      if (response.statusCode == 201) {  
+        return FavoritePokemonMapper.fromMap(response.data['favPokemon']);
+
+      } else if (response.statusCode == 400) {
+        throw Exception('Pokemon ya guardado');
+
       } else {
+
         throw Exception(response.data['message'] ?? 'Error al guardar el pokemon');
+
       }
     } catch (error) {
       throw Exception("Error al guardar pokemon: $error");

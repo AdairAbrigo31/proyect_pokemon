@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:my_pokemon_tia/domain/entities/entities.dart';
+import 'package:my_pokemon_tia/presentation/controllers/evolution_pokemon_controller.dart';
 import 'package:my_pokemon_tia/presentation/providers/providers.dart';
 import 'package:my_pokemon_tia/presentation/widgets/widgets.dart';
 
@@ -55,9 +56,24 @@ class CardPokemonSaved extends ConsumerWidget {
 
                 IconButton(
 
-                  onPressed: () {
+                  onPressed: () async {
+
+                    try {
+
+                      showLoading(context, "Eliminando pokemon");
                     
-                    ref.read(pokemonProvider.notifier).deletePokemonOfUser(token , pokemon.name);
+                      await ref.read(pokemonProvider.notifier).deletePokemonOfUser(token , pokemon.name);
+
+                      hideLoading(context);
+
+
+                    } catch (error) {
+
+                      hideLoading(context);
+
+                      throw ('$error');
+
+                    }
 
                   },
 
@@ -144,9 +160,19 @@ class CardPokemonSaved extends ConsumerWidget {
 
                 try {
 
-                  //Buscar evolución
-                  //Si hay evolución, guardarla en la base de datos
-                  //Borrar el pokemon evolucionado de la base de datos
+                  showLoading(context, "Evolucionando pokemon");
+
+                  final pokemonEvolutionated = await EvolutionPokemonController.evolutionPokemon(pokemon, ref, token);
+
+                  if ( pokemonEvolutionated.name == pokemon.name ) {
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('El pokemon no puede evolucionar más'),
+                      ),
+                    );
+
+                  }
 
                 } catch ( error ) {
 
@@ -155,12 +181,15 @@ class CardPokemonSaved extends ConsumerWidget {
                       content: Text('Error: $error'),
                     ),
                   );
+                } finally {
+
+                  hideLoading(context);
+
                 }
 
               }
             )
             
-            // Puedes agregar más secciones aquí como stats, peso, altura, etc.
           ],
         ),
       ),

@@ -81,6 +81,28 @@ class PokemonNotifier extends StateNotifier<PokemonState> {
 
       await _backendApi.deleteFavorite(token, name);
 
+      state = state.copyWith(isLoading: false);
+
+    } catch (error) {
+
+      throw ("$error");
+
+    }
+
+  }
+
+
+  Future<PokemonEntity?> evolucionPokemon(PokemonEntity pokemon) async {
+
+    try {
+
+      // Obtener ID de la cadena de evolución
+      final evolutionChainId = await _pokeApi.findPokemonEspeciesId(pokemon.id);
+
+      final pokemonEvolutioned = await _pokeApi.getNextEvolution(pokemon, evolutionChainId);
+
+      return pokemonEvolutioned;
+
     } catch (error) {
 
       throw ("$error");

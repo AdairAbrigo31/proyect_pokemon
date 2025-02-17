@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:my_pokemon_tia/configuration/configuration.dart';
 import 'package:my_pokemon_tia/presentation/providers/providers.dart';
 import 'package:my_pokemon_tia/presentation/widgets/widgets.dart';
 
@@ -129,14 +130,26 @@ class PokemonDetailView extends ConsumerWidget{
 
                 try {
 
+                  showLoading(context, "Guardando pokemon");
+
                   final token = ref.read(authProvider).token;
                   await ref.read(pokemonProvider.notifier).savePokemon(token!, pokemon);
 
-                } catch ( error ) {
+                  hideLoading(context);
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Error: $error'),
+                      content: Text('El pokemon ha sido guardado en tus favoritos'),
+                    ),
+                  );
+
+                } catch ( error ) {
+
+                  hideLoading(context);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error : Ya tienes este pokemon en tus favoritos'),
                     ),
                   );
                 }

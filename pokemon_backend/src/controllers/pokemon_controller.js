@@ -39,12 +39,16 @@ const favoritePokemonController = {
             message: 'Pokemon favorito añadido correctamente',
             favPokemon
           });
+          
         } catch (error) {
+
           console.error('Error en addFavorite:', error);
+
           res.status(500).json({
             message: 'Error al añadir el pokemon favorito',
             error: error.message
           });
+
         }
       },
 
